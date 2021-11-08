@@ -333,8 +333,30 @@
                         <div slot="content"><b class="text-primary">End:</b><br/>Show the final result of the algorithm.</div>
                         <base-button type="primary" class="col-md-2">End</base-button>
                     </el-tooltip>
+                    
                 </div>
             </form>
+            <br>
+            <div slot="content"><b class="text-primary">ShowTable:</b><br/>Show the final table of the algorithm.</div>
+                        <base-button type="primary" v-on:click="showDataTable()" class="col-md-2">Show Table</base-button>
+            <div>
+                <!--table-->
+                <div id="table" style="width: 80%">
+                    <table id="myTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Cluster</th>
+                                <th>Amount</th>
+                                <th>Percentage</th>
+                                <th>Standar Deviation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyMyTable">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </card>
     </div>
 </template>
@@ -347,6 +369,7 @@ import Vue from 'vue';
 import VueKatex from 'vue-katex';
 import 'katex/dist/katex.min.css';
 import BaseButton from '../../../components/BaseButton.vue';
+import clusters from './clusters.json';
 
 
 Vue.use(VueKatex, {
@@ -482,7 +505,6 @@ BaseButton
                 console.log(response.data)
                 this.model = response.data;
                 this.scatter = response.data;
-
                 this.avilableIterations = Object.keys(this.scatter)
                 this.iterationIndex = this.avilableIterations[0]
 
@@ -491,6 +513,27 @@ BaseButton
             // .catch(function(response){
             //     console.log(response.message);
             // });
+        },
+        showDataTable(realClusters = clusters){
+            console.log(realClusters)
+            //llenar la tabla de clusters
+            var table = document.getElementById("myTable");
+            var old_tbody = document.getElementById("tbodyMyTable");
+            var new_tbody = document.createElement('tbody');
+            
+            tbodyMyTable.parentNode.replaceChild(new_tbody, old_tbody)
+            for(let i = 0; i < realClusters.length; i++){
+                var row = table.insertRow(i+1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+
+                cell1.innerHTML = realClusters[i].cluster;
+                cell2.innerHTML = realClusters[i].amount;
+                cell3.innerHTML = realClusters[i].percent;
+                cell4.innerHTML = realClusters[i].standarDeviation;
+            }
         },
 
         chooseFiles() {
