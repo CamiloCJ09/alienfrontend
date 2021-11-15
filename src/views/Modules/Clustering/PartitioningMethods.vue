@@ -503,8 +503,8 @@ BaseButton
                 console.log('SUCCESS!!');
                 
                 console.log(response.data)
-                this.model = response.data;
-                this.scatter = response.data;
+                this.model = response.data["step"];
+                this.scatter = response.data["step"];
                 this.avilableIterations = Object.keys(this.scatter)
                 this.iterationIndex = this.avilableIterations[0]
 
