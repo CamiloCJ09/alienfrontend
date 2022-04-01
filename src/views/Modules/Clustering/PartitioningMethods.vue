@@ -38,6 +38,7 @@
         <div class="col-12" align="center">
             <h1>Clustering</h1>
             <base-button type="primary" @click.native="modals.clustering = true">About</base-button>
+            <base-button type="primary" @click.prevent="downloadFile('/files/clusteringTest.csv', 'Test.csv')">Test</base-button>
         </div>
 
         <!--About.................................................................................................................-->
@@ -310,6 +311,7 @@
                         type="number"
                         v-model="input.iteration"
                         v-validate="inputValidations.iteration"
+                        :disabled="isNotSubmited"
                         :error="getError('Iteration')"
                         placeholder="Iterations"
                         class="col-md-4 select-default"
@@ -322,7 +324,7 @@
                     placement="bottom"
                     >
                         <div slot="content"><b class="text-primary">Next:</b><br/>Move the number of specified iterations.</div>
-                        <base-button type="primary" v-on:click="step()" class="col-md-2">Next</base-button>
+                        <base-button type="primary" v-on:click="step()" :disabled="isNotSubmited" class="col-md-2">Next</base-button>
                     </el-tooltip>
                     <!--End-->
                     <el-tooltip
@@ -331,7 +333,7 @@
                     placement="right"
                     >
                         <div slot="content"><b class="text-primary">End:</b><br/>Show the final result of the algorithm.</div>
-                        <base-button type="primary" class="col-md-2">End</base-button>
+                        <base-button type="primary" :disabled="isNotSubmited" class="col-md-2">End</base-button>
                     </el-tooltip>
                 </div>
             </form>
@@ -382,6 +384,8 @@ BaseButton
             avilableIterations:'',
             iterationIndex:'',
             
+            isNotSubmited: true,
+
             //Modals
             modals: {
                 clustering: false,
@@ -393,7 +397,7 @@ BaseButton
 
             //Inputs
             input: {
-                algorithm: '',
+                algorithm: 'K-Means',
                 clusters: 2,
                 pca: false,
                 iteration: 200
@@ -456,7 +460,6 @@ BaseButton
 
         //Submit
         submitFile(){
-
             let formData = new FormData();
 
             formData.append('file', this.file);
@@ -484,6 +487,8 @@ BaseButton
                 this.iterationIndex = this.avilableIterations[0]
 
                 this.graphRoute();
+
+                this.isNotSubmited = false;
             })
             // .catch(function(response){
             //     console.log(response.message);
